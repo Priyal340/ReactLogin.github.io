@@ -13,23 +13,24 @@ const Details = () => {
 
     const [show, setShow] = useState(false);
 
-    var today = new Date().toISOString().slice(0, 10);
+    var todayDate = new Date().toISOString().slice(0, 10);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    const Date = () => {
+    const Birthday = () => {
         const getuser = localStorage.getItem("user_login");
 
         if (getuser && getuser.length) {
             const user = JSON.parse(getuser);
+            
             setLoginData(user);
 
-            const userdate = logindata.map((el, k) => {
-                return el.date === today
+            const userbirth = logindata.map((el, k) => {
+                return el.date === todayDate
             });
 
-            if (userdate) {
+            if (userbirth) {
                 setTimeout(() => {
                     handleShow();
                 }, 3000);
@@ -37,13 +38,14 @@ const Details = () => {
         }
     }
 
+
     const userlogout = ()=>{
         localStorage.removeItem("user_login");
         history("/");
     }
 
     useEffect(() => {
-        Date();
+        Birthday();
     }, [])
 
     return (
@@ -53,10 +55,10 @@ const Details = () => {
                     <>
                         <h1>Details Page</h1>
                         <h3>{logindata[0].name}</h3>
-                        <Button onClick={userlogout}>LogOut</Button>
+                        <Button variant="secondary" size="md" active onClick={userlogout}>LogOut</Button>
 
                         {
-                            logindata[0].date === today ?
+                            logindata[0].date === todayDate ?
 
                             <Modal show={show} onHide={handleClose}>
                                 <Modal.Header closeButton>
