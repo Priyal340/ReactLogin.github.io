@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
-// import Modal from 'react-bootstrap/Modal'
 import { NavLink } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Home = () => {
+
+    const history = useNavigate();
 
     const [inpval, setInpval] = useState({
         name: "",
@@ -13,7 +17,7 @@ const Home = () => {
         password: ""
     })
 
-    const [data, setData] = useState([]);
+    const [data] = useState([]);
     console.log(inpval);
 
     const getdata = (e) => {
@@ -30,44 +34,36 @@ const Home = () => {
         })
     }
 
-    // const [show, setShow] = useState(false);
-
-    // const handleClose = () => setShow(false);
-    // const handleShow = () => setShow(true);
-
     const adddata = (e) => {
         e.preventDefault();
 
         const { name, email, date, password } = inpval;
 
         if (name === "" || email === "" || date === "" || password === "") {
-            alert("All fiels are required here...");
+            toast.error('All fiels are required here...',{
+                position: "top-center",
+            });
         }
         else if (!email.includes("@")) {
-            alert("Enter a valid email ID!!");
+            toast.error('Enter a valid email ID!',{
+                position: "top-center",
+            });
         }
         else if (password.length < 6) {
-            alert("Enter valid password!!");
+            toast.error('Enter valid password!!!',{
+                position: "top-center",
+            });
         }
         else {
             console.log("data added successfully.");
 
+            history("/login")
+
             localStorage.setItem("userkey", JSON.stringify({ ...data, inpval }));
 
-            alert("Your Data Is Added Successfully.");
-        //     <Modal show={show} onHide={handleClose}>
-        //         <Modal.Header closeButton>
-        //             <Modal.Title>Hurrayh!!</Modal.Title>
-        //         </Modal.Header>
-        //         <Modal.Body>Your Data Is Added Successfully.</Modal.Body>
-        //         <Modal.Footer>
-        //         <Button variant="secondary" onClick={handleClose}>
-        //     Close
-        //   </Button>
-        //             <Button variant="primary" onClick={handleShow}>Continue </Button>
-        //         </Modal.Footer>
-        //     </Modal>
-
+            toast.error('Your Data Is Added Successfully.',{
+                position: "top-center",
+            });
         }
     }
 
@@ -91,7 +87,7 @@ const Home = () => {
                             </Form.Group>
 
                             <Form.Group className="mb-3 col-lg-6" controlId="formBasicEmail">
-                                <Form.Label>Date</Form.Label>
+                                <Form.Label>Birthdate</Form.Label>
                                 <Form.Control type="date" name="date" onChange={getdata} />
                             </Form.Group>
 
@@ -108,10 +104,12 @@ const Home = () => {
 
                     <div className="right_data mt-3" style={{ width: "100%" }}>
                         <div className="sign_img mt-3">
-                            <img src='./signup.png' style={{ maxWidth: 450 }} alt='A picture was here...' />
+                            <img src='./signup.png' style={{ maxWidth: 450 }} alt='OOPS!! NOT AVAILABLE' />
                         </div>
                     </div>
+
                 </section>
+                <ToastContainer/>
             </div>
         </>
     )
