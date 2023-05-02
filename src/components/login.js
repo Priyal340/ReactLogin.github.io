@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import { useNavigate } from "react-router-dom"
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from 'react-toastify';
+
 
 function Login() {
 
@@ -12,7 +15,6 @@ function Login() {
         password: ""
     })
 
-    const [data, setData] = useState([]);
     console.log(inpval);
 
     const getdata = (e) => {
@@ -37,49 +39,44 @@ function Login() {
 
         const { email, password } = inpval;
 
-        if (email === "" || password === "") {
-            alert("All fiels are required here...");
+        if ( email === "" ||password === "") {
+            toast.error('All fiels are required here...',{
+                position: "top-center",
+            });
         }
         else if (!email.includes("@")) {
-            alert("Enter a valid email ID!!");
+            toast.error('Enter a valid email ID!',{
+                position: "top-center",
+            });
         }
         else if (password.length < 6) {
-            alert("Enter valid password!!");
+            toast.error('Enter valid password!!!',{
+                position: "top-center",
+            });
         }
         else {
 
-            // if (getuserArr && getuserArr.length) {
-            //     const userdata = JSON.parse(getuserArr);
-            //     // const userdata = JSON.stringify([getuserArr]);
+            if (getuserArr && getuserArr.length) {
+                const userobj = JSON.parse(getuserArr);
 
-            //     if (Array.isArray(userdata)) {
-            //       const userlogin = userdata.filter((el, k) => {
-            //         return el.email === email && el.password === password;
-            //       });
+                const userdata = Object.values(userobj);
+                
+                console.log(userdata);
+                console.log(typeof userkey);
 
-            //     } else {
-            //       console.log('Error: userdata is not an array');
-            //     }
-            //     console.log(userdata);
-            //   }
-              
+                const userlogin = userdata.filter((el, k) => {
+                    return el.email === email && el.password === password;
+                });
 
-    //         original code
-            // if (getuserArr && getuserArr.length) {
-            //     const userdata = JSON.parse(getuserArr);
-            //     const userlogin = userdata.filter((el, k) => {
-            //         return el.email === email && el.password === password;
-            //     });
+                if (userlogin.length === 0) {
+                    alert("invalid details!!")
+                } else {
+                    console.log("User loged in successfully.");
 
-            //     if (userlogin.length === 0) {
-            //         alert("invalid details!!")
-            //     } else {
-            //         console.log("User loged in successfully.");
-
-            //         localStorage.setItem("user_login", JSON.stringify(getuserArr));
-            //         history("/details");
-            //     }
-            // }
+                    localStorage.setItem("user_login", JSON.stringify(getuserArr));
+                    history("/details");
+                }
+            }
        }
      }
 
@@ -89,13 +86,12 @@ function Login() {
                 <section className='d-flex justufy-content-between'>
                     <div className="left_data mt-3 " style={{ width: "100%" }}>
                         <h3 className='text-center col-lg-6'>Sign IN</h3>
-                        <div className="left_data"></div>
 
                         <Form>
+
                             <Form.Group className="mb-3 col-lg-6" controlId="formBasicEmail">
                                 <Form.Label>Email address</Form.Label>
                                 <Form.Control type="email" name="email" onChange={getdata} placeholder="abc@gmail.com" />
-
                             </Form.Group>
 
                             <Form.Group className="mb-3 col-lg-6" controlId="formBasicPassword">
@@ -103,11 +99,9 @@ function Login() {
                                 <Form.Control type="password" name="password" onChange={getdata} placeholder="" />
                             </Form.Group>
 
-                            <Button variant="secondary" size="lg" active onClick={adddata}>Submit</Button>
+                            <Button type="submit" variant="secondary" size="lg" active onClick={adddata}>Submit</Button>
 
                         </Form>
-
-                        <p className='mt-3'>Already have an account? <span>SignIn</span></p>
 
                     </div>
 
@@ -118,6 +112,7 @@ function Login() {
                     </div>
 
                 </section>
+                <ToastContainer/>
             </div>
         </>
     )
